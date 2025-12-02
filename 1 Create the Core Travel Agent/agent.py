@@ -68,4 +68,5 @@ async def main():
         print("Error", e)
 
 if __name__ == "__main__":
+    print("Starting ...")
     asyncio.run(main())
