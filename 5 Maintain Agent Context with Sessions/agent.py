@@ -60,7 +60,9 @@ budget_guardrail_agent = Agent(
 
 async def budget_guardrail(ctx, agent, input_data):
     result = await Runner.run(budget_guardrail_agent, input_data, context=ctx.context)
+    # I still want to see the guardrail reasoning
     final_output = result.final_output_as(BudgetCheckOutput)
+    print("Budget gaurdrail reasoning: ", final_output.reasoning)
     return GuardrailFunctionOutput(
         output_info=final_output, 
         tripwire_triggered=not final_output.is_valid
@@ -189,11 +191,21 @@ async def main():
         print("==================NEXT RUN=======================")
 
         # Second turn - agent automatically remembers previous context
+
+        # Original 2nd request
+        #result = await Runner.run(
+        #    travel_agent,
+        #    "I actually think I'd like to go to the Bahamas instead. My budget is still the same.",
+        #    session=session
+        #)
+
+        # New request to see if the guardrail triggers in this context
         result = await Runner.run(
             travel_agent,
-            "I actually think I'd like to go to the Bahamas instead. My budget is still the same.",
+            "Actually my budget is $100",
             session=session
         )
+
         print_fields(result.final_output)  
     except InputGuardrailTripwireTriggered as e:
         print("\nGuardrail blocked this budget: ", e)

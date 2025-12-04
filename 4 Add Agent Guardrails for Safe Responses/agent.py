@@ -174,12 +174,21 @@ def print_fields(data):
 
 async def main():
     try:
-        result = await Runner.run(travel_agent, '''I'm considering a trip to Jamaica sometime in late September or early October. 
-                                                I'm pretty flexible with the exact dates, maybe around a week-long trip.     
-                                                I'd like to get an idea of flight ticket prices and some well-located hotels.     
-                                                I'm also a big foodie, so any recommendations for great local restaurants would be fantastic! 
+        # Original request
+        #result = await Runner.run(travel_agent, '''I'm considering a trip to Jamaica sometime in late September or early October. 
+        #                                        I'm pretty flexible with the exact dates, maybe around a week-long trip.     
+        #                                        I'd like to get an idea of flight ticket prices and some well-located hotels.     
+        #                                        I'm also a big foodie, so any recommendations for great local restaurants would be fantastic! 
+        #                                        Do not ask follow-up questions.
+        #                                        My budget is limited to $100.''')
+        
+        # Modified request to confirm the guardrail is not going to trigger due to a false positive
+        result = await Runner.run(travel_agent, '''I'm considering a trip to the local park here in Horizon West Florida sometime in the afternoon. 
+                                                I'm pretty flexible with the time, maybe around a 1 or 2 hours trip.     
+                                                I'd like to get an idea of prices of the bus to the park and a sandwitch ot eat.     
                                                 Do not ask follow-up questions.
                                                 My budget is limited to $100.''')
+        
         print_fields(result.final_output)
     except InputGuardrailTripwireTriggered as e:
         print("\nGuardrail blocked this budget: ", e)
